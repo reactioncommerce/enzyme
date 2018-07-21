@@ -474,9 +474,14 @@ describe('Utils', () => {
         expect(result).to.equal('animationiteration');
       });
 
-      it('transforms events when supported', () => {
+      it('transforms animation events when supported', () => {
         const result = mapNativeEventNames('animationiteration', { animation: true });
         expect(result).to.equal('animationIteration');
+      });
+
+      it('transforms pointer events when supported', () => {
+        const result = mapNativeEventNames('pointerover', { pointerEvents: true });
+        expect(result).to.equal('pointerOver');
       });
     });
   });

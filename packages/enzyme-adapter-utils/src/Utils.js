@@ -5,6 +5,7 @@ export { createMountWrapper, createRenderWrapper };
 
 export function mapNativeEventNames(event, {
   animation = false, // should be true for React 15+
+  pointerEvents = false, // should be true for React 16.4+
 } = {}) {
   const nativeToReactEventMap = {
     compositionend: 'compositionEnd',
@@ -48,6 +49,18 @@ export function mapNativeEventNames(event, {
       animationstart: 'animationStart',
       animationiteration: 'animationIteration',
       animationend: 'animationEnd',
+    }),
+    ...(pointerEvents && {
+      pointerdown: 'pointerDown',
+      pointermove: 'pointerMove',
+      pointerup: 'pointerUp',
+      pointercancel: 'pointerCancel',
+      gotpointercapture: 'gotPointerCapture',
+      lostpointercapture: 'lostPointerCapture',
+      pointerenter: 'pointerEnter',
+      pointerleave: 'pointerLeave',
+      pointerover: 'pointerOver',
+      pointerout: 'pointerOut',
     }),
   };
 
