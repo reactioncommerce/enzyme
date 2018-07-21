@@ -1504,6 +1504,73 @@ describe('shallow', () => {
           expect(spy).to.have.property('callCount', 1);
         });
       });
+
+      describeIf(is('>= 15'), 'animation events', () => {
+        it('should convert lowercase events to React camelcase', () => {
+          const spy = sinon.spy();
+          class Foo extends React.Component {
+            render() {
+              return (
+                <a onAnimationIteration={spy}>foo</a>
+              );
+            }
+          }
+
+          const wrapper = shallow(<Foo />);
+
+          wrapper.simulate('animationiteration');
+          expect(spy).to.have.property('callCount', 1);
+        });
+
+        it('should convert lowercase events to React camelcase in stateless components', () => {
+          const spy = sinon.spy();
+          const Foo = () => (
+            <a onAnimationIteration={spy}>foo</a>
+          );
+
+          const wrapper = shallow(<Foo />);
+
+          wrapper.simulate('animationiteration');
+          expect(spy).to.have.property('callCount', 1);
+        });
+      });
+
+      describeIf(is('>= 16.4'), 'pointer events', () => {
+        it('should convert lowercase events to React camelcase', () => {
+          const spy = sinon.spy();
+          class Foo extends React.Component {
+            render() {
+              return (
+                <a onGotPointerCapture={spy}>foo</a>
+              );
+            }
+          }
+
+          const wrapper = shallow(<Foo />);
+
+          wrapper.simulate('gotpointercapture');
+          expect(spy).to.have.property('callCount', 1);
+        });
+
+        it('should convert lowercase events to React camelcase in stateless components', () => {
+          const spy = sinon.spy();
+          const Foo = () => (
+            <a onGotPointerCapture={spy}>foo</a>
+          );
+
+          const wrapper = shallow(<Foo />);
+          const orig = wrapper.getElement().props;
+          wrapper.getElement().props = new Proxy(orig, {
+            get(...args) {
+              console.error(require('utils').inspect(args));
+              return Reflect.get(...args);
+            },
+          });
+
+          wrapper.simulate('gotpointercapture');
+          expect(spy).to.have.property('callCount', 1);
+        });
+      });
     });
 
     itIf(BATCHING, 'should be batched updates', () => {

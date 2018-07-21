@@ -210,12 +210,14 @@ class ReactSixteenAdapter extends EnzymeAdapter {
         return instance ? toTree(instance._reactInternalFiber).rendered : null;
       },
       simulateEvent(node, event, mock) {
-        const mappedEvent = mapNativeEventNames(event, { animation: true });
+        const mappedEvent = mapNativeEventNames(event, {
+          animation: true,
+          pointerEvents: true, // 16.4+
+        });
         const eventFn = TestUtils.Simulate[mappedEvent];
         if (!eventFn) {
           throw new TypeError(`ReactWrapper::simulate() event '${event}' does not exist`);
         }
-        // eslint-disable-next-line react/no-find-dom-node
         eventFn(nodeToHostNode(node), mock);
       },
       batchedUpdates(fn) {
@@ -309,7 +311,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
 
   // Provided a bag of options, return an `EnzymeRenderer`. Some options can be implementation
   // specific, like `attach` etc. for React, but not part of this interface explicitly.
-  // eslint-disable-next-line class-methods-use-this, no-unused-vars
+  // eslint-disable-next-line class-methods-use-this
   createRenderer(options) {
     switch (options.mode) {
       case EnzymeAdapter.MODES.MOUNT: return this.createMountRenderer(options);
@@ -323,7 +325,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
   // converts an RSTNode to the corresponding JSX Pragma Element. This will be needed
   // in order to implement the `Wrapper.mount()` and `Wrapper.shallow()` methods, but should
   // be pretty straightforward for people to implement.
-  // eslint-disable-next-line class-methods-use-this, no-unused-vars
+  // eslint-disable-next-line class-methods-use-this
   nodeToElement(node) {
     if (!node || typeof node !== 'object') return null;
     return React.createElement(node.type, propsWithKeysAndRef(node));
